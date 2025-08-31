@@ -30,7 +30,7 @@ app.engine('hbs', hbs.engine({
     toString: (value) => { return value.toString(); },
     typeof: (data) => typeof (data),
     gte: (a, b) => a >= b,
-    lte: (a, b) => a <= b,
+    lte: (a, b) => a <= b, 
     
     cond: (a, op, b) => {
       const ops = {
