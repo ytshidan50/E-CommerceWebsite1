@@ -1,0 +1,252 @@
+{{#if (gte order.products.length 1)}}
+<section class="mt-5">
+    <div class="container-fluid">
+
+        <!-- Page Header -->
+        <div class="row mb-4 align-items-center">
+            <div class="col-8">
+                <h2>Order #<code style="max-width: 100%; white-space: nowrap;
+                 overflow: hidden; text-overflow: ellipsis; display: inline-block;
+                 vertical-align: middle;"> {{toString order._id}} </code>
+                </h2>
+            </div>
+            <div class="col-4 d-flex justify-content-end gap-2">
+                <button class="btn btn-outline-primary btn-sm" onclick="window.print()">
+                    <i class="fas fa-print"></i> Print
+                </button>
+                <button class="btn btn-outline-danger btn-sm" onclick="goTo('/admin/full-orders')">
+                    <i class="fas fa-arrow-left"></i> Back
+                </button>
+            </div>
+        </div>
+
+        <!-- Delivery & Summary -->
+        <div class="row mb-4">
+            <div class="col-md-4 col-sm-6 g-4">
+                <div class="card bg-body-secondary text-body">
+                    <div class="card-header">Delivery Details</div>
+                    <div class="card-body">
+                        <p><strong>Mobile:</strong> {{order.deliveryDetails.mobile}}</p>
+                        <p><strong>Address:</strong> {{order.deliveryDetails.address}}</p>
+                        <p><strong>Pin Code:</strong> {{order.deliveryDetails.pinCode}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6 g-4">
+                <div class="card bg-body-secondary text-body">
+                    <div class="card-header">Order Info</div>
+                    <div class="card-body">
+                        <p><strong>Ordered On:</strong> {{formatDate order.times.ordered}}</p>
+                        <p><strong>Status:</strong>
+                            <span class="badge 
+                                {{#if (cond order.status '===' 'pending')}}bg-warning text-dark{{/if}}
+                                {{#if (cond order.status '===' 'placed')}}bg-primary{{/if}}
+                                {{#if (cond order.status '===' 'shipped')}}bg-info{{/if}}
+                                {{#if (cond order.status '===' 'delivered')}}bg-success{{/if}}
+                                {{#if (cond order.status '===' 'returned')}}bg-danger{{/if}}
+                                {{#if (cond order.status '===' 'cancelled')}}bg-dark{{/if}}">
+                                {{order.status}}
+                            </span>
+                        </p>
+
+                        <!-- Next Action Button -->
+                        <div class="mt-3">
+                            {{#if (cond order.status '===' 'placed')}}
+                            <button class="btn btn-sm btn-success" id="shipOrderBtn-{{this._id}}"
+                                onclick="shipOrder('{{order._id}}')">Ship
+                                Order</button>
+                            {{else if (cond order.status '===' 'pending')}}
+                            <button class="btn btn-sm btn-primary" disabled>Ship Order</button>
+                            {{else if (cond order.status '===' 'shipped')}}
+                            <button class="btn btn-sm btn-success" id="confirmDeliveredBtn-{{order._id}}"
+                                onclick="confirmDelivered('{{order._id}}')">Mark Delivered</button>
+                            {{/if}}
+                        </div>
+
+                        <p><strong>Payment:</strong>
+                            {{#if (cond order.payment.method '===' 'COD')}}
+                            COD
+                            {{#if (cond order.status '===' 'delivered')}}
+                            <span class="badge bg-success ms-2">Paid (COD)</span>
+                            {{else}}
+                            <span class="badge bg-warning ms-2">To be collected on delivery</span>
+                            {{/if}}
+                            {{else}}
+                            {{order.payment.method}} — <span class="fw-semibold">₹{{order.total}}</span>
+                            {{#if (cond order.status '===' 'pending')}}
+                            <span class="badge bg-warning ms-2">Awaiting Payment</span>
+                            {{else}}
+                            <span class="badge bg-success ms-2">Paid</span>
+                            {{/if}}
+                            {{/if}}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6 g-4">
+                <div class="card bg-body-secondary text-body">
+                    <div class="card-header">Order Summary</div>
+                    <div class="card-body">
+                        <p><strong>Total Items:</strong> {{order.totalItems}}</p>
+                        <p><strong>Subtotal:</strong> ₹{{order.total}}</p>
+                        <p><strong>Delivery Fee:</strong> ₹0<span class="badge bg-success ms-2">Free Delivery</span></p>
+                        <hr>
+                        <p class="fs-5"><strong>Grand Total:</strong> ₹{{order.total}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="">
+                <div class="d-flex text-center">
+                    <div style="width: 12%;" class=" ">
+                        <div></div>
+                    </div>
+                    <div style="width: 22%;" class=" ">
+                        <i class="bi bi-bag-fill fs-3 {{#if order.times.ordered}} text-warning
+                                {{else}}text-secondary{{/if}}"></i>
+                        <div>Ordered</div>
+                    </div>
+                    <div style="width: 22%;" class=" ">
+                        <i class="bi bi-person-check-fill fs-3 {{#if order.times.confirmed}}text-primary
+                                {{else}}text-secondary{{/if}}"></i>
+                        <div>Confirmed</div>
+                    </div>
+                    <div style="width: 22%;" class=" ">
+                        <i class="bi bi-truck fs-3 {{#if order.times.shipped}}text-info
+                                {{else}}text-secondary{{/if}}"></i>
+                        <div>Shipped</div>
+                    </div>
+                    <div style="width: 22%;" class=" ">
+                        <i class="bi bi-box-seam-fill fs-3 {{#if order.times.delivered}}text-success
+                                {{else}}text-secondary{{/if}}"></i>
+                        <div>Delivered</div>
+                    </div>
+                </div>
+                <div class="mt-2 position-relative">
+                    <div class="progress" role="progressbar" aria-label="" aria-valuenow="" aria-valuemin="" aria-valuemax=""
+                        style=" height:0.5em; position:absolute; left:0; right:0;">
+                        <div class="progress-bar {{#if order.times.delivered}}{{else}}progress-bar-striped progress-bar-animated{{/if}} bg-success"
+                            style="width: 
+                                {{#if order.times.delivered}}100%
+                                {{else if order.times.shipped}}67%
+                                {{else if order.times.confirmed}}45%
+                                {{else if order.times.ordered}}23%
+                                {{else}}6%{{/if}}">
+                        </div>
+                    </div>
+                    <div style="position: absolute; top:-0.33em;
+                         left: calc({{#if order.times.delivered}}89%
+                                    {{else if order.times.shipped}}67%
+                                    {{else if order.times.confirmed}}45%
+                                    {{else if order.times.ordered}}23%
+                                    {{else}}6%{{/if}} - 0.7em);">
+                        <span><i class="fa-solid fa-cart-shopping text-success-emphasis fs-4"></i></span>
+                    </div>
+                </div>
+                <div class=" mt-4 d-flex text-center">
+                    <div style="width: 12%;">
+                        <div> </div>
+                    </div>
+                    <div style="width: 22%;">
+                        <div><span class="text-warning-emphasis">{{formatDateShort order.times.ordered}}</span></div>
+                    </div>
+                    <div style="width: 22%;">
+                        <div><span class="text-primary-emphasis">{{formatDateShort order.times.confirmed}}</span></div>
+                    </div>
+                    <div style="width: 22%;">
+                        <div><span class="text-info-emphasis">{{formatDateShort order.times.shipped}}</span></div>
+                    </div>
+                    <div style="width: 22%;">
+                        <div><span class="text-success-emphasis">{{formatDateShort order.times.delivered}}</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Table -->
+        <div class="mb-4">
+            <div class="card bg-body-secondary text-body">
+                <div class="card-body table-responsive">
+                    <table class="table table-hover align-middle datatable">
+                        <thead class="table-body-tertiary text-body-secondary">
+                            <tr>
+                                <th>#</th>
+                                <th>Product</th>
+                                <th>Rate</th>
+                                <th>Qty</th>
+                                <th>Sub Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each order.products}}
+                            <tr>
+                                <td>{{add @index 1}}</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <img src="/productImages/{{this._id}}.png" alt="" class="rounded me-3"
+                                            style="width:3em;">
+                                        <div>
+                                            <strong>{{this.name}}</strong><br>
+                                            <small class="text-body-secondary">{{this.description}}</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>₹{{this.rate}}</td>
+                                <td>{{this.quantity}}</td>
+                                <td>₹{{mul this.rate this.quantity}}</td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Shipment / Return Notes -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card bg-body-secondary text-body">
+                    <div class="card-header">
+                        <h5 class="mb-0">Admin Notes</h5>
+                    </div>
+                    <div class="card-body">
+                        <textarea id="adminNote" class="form-control" rows="3"
+                            placeholder="Add shipment tracking or return notes…">{{order.adminNote}}</textarea>
+                        <button class="btn btn-sm btn-outline-primary mt-2"
+                            onclick="saveNote('{{order._id}}', document.getElementById('adminNote').value)">
+                            Save Notes
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="/javascripts/adminScripts.js"></script>
+
+<script>
+    function saveNote(orderId, note) {
+        fetch('/admin/update-note', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ orderId, note })
+        })
+            .then(response => response.json())
+            .then(response => {
+                sendToast(response.toastType, response.toastTitle, response.toastIcon, response.toastMessage);
+                document.getElementById('adminNote').value = note;
+            })
+            .catch(err => sendAlert('Failed to save notes'));
+    }
+
+</script>
+{{else}}
+<div class="alert alert-danger">
+    Order not found. <a href="/admin/full-orders" class="alert-link">Back to list</a>
+</div>
+{{/if}}

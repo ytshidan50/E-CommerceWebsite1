@@ -1,0 +1,36 @@
+<section class="mt-5">
+    <div class="container-fluid">
+        <div class="row p-4">
+            <h1 class="text-center">Login</h1>
+            {{#if loginErr}}
+            <p class="error">{{loginText}}</p>
+            {{/if}}
+            <form class="row g-3 needs-validation" method="post" action="/login" novalidate>
+                <div class="col-12">
+                    <label for="email" class="form-label">Email</label>
+                    <div class="input-group has-validation">
+                        <span class="input-group-text" id="inputGroupPrepend">📧</span>
+                        <input type="email" id="email" name="email" class="form-control"
+                            aria-describedby="inputGroupPrepend" required>
+                        <div class="invalid-feedback">
+                            Please enter the mail id.
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                    <div class="invalid-feedback">
+                        Enter your password.
+                    </div>
+                </div>
+                <div class="col-12">
+                    <button class="btn btn-primary ms-auto" type="submit">Login</button>
+                </div>
+                <div class="col-12">
+                    <a href="/signup">Dont have an account? Sign Up!</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>

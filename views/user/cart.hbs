@@ -1,0 +1,80 @@
+{{#if (gte cart.productIds.length 1)}}
+<section class="mt-5">
+    <div class="container-fluid">
+        <div class="row p-5">
+            <div class="table-responsive">
+                <table class="table-dark table table-hover">
+                    <thead>
+                        <tr>
+                            <td>#</td>
+                            <td>Produc Image</td>
+                            <td>Product Details</td>
+                            <td>Rate</td>
+                            <td>Quantity</td>
+                            <td>Sub Total</td>
+                            <td></td>
+                        </tr>
+                    </thead>
+                    <tbody class="table-group-divider align-middle">
+                        {{#each cart.products}}
+                        <tr>
+                            <th scope="row">{{add @index 1}}</th>
+                            <td>
+                                <img src="/productImages/{{this._id}}.png" alt="" class="rounded-2" style="width: 4em;">
+                            </td>
+                            <td>
+                                <h6>{{this.name}}</h6>
+                                <p>{{this.description}}</p>
+                            </td>
+                            <td>Rs. <span id="productRate-{{this._id}}">{{this.rate}}</span></td>
+                            <td>
+                                {{#if (lte this.quantity 1)}}
+                                <button class="btn btn-outline-secondary btn-sm"
+                                    onclick="removeFromCart('{{this._id}}','false','{{@root.req.session.loggedIn}}')"
+                                    id="quantityDecBtn-{{this._id}}" disabled>-</button>
+                                {{else}}
+                                <button class="btn btn-outline-primary btn-sm"
+                                    onclick="removeFromCart('{{this._id}}','false','{{@root.req.session.loggedIn}}')"
+                                    id="quantityDecBtn-{{this._id}}">-</button>
+                                {{/if}}
+                                <span id="productQuantity-{{this._id}}">{{this.quantity}}</span>
+                                <button class="btn btn-outline-success btn-sm"
+                                    onclick="addToCart('{{this._id}}','{{this.name}}','{{@root.req.session.loggedIn}}')">+</button>
+                            </td>
+                            <td>Rs. <span id="productSubTotal-{{this._id}}">{{mul this.rate this.quantity}}</span></td>
+                            <td><button class="btn btn-danger"
+                                    onclick="removeFromCart('{{this._id}}','true','{{@root.req.session.loggedIn}}')">Remove</button>
+                            </td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                    <tfoot class="table-group-divider">
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="text-end">Total:</td>
+                            <td>Rs. <span class="fw-bold" id="cartTotal">{{cart.total}}</span></td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <hr>
+            <div class="d-flex justify-content-end">
+                <a href="/place-order" class="btn btn-success w-25">Place Order</a>
+            </div>
+        </div>
+    </div>
+</section>
+{{else}}
+<section class="mt-5">
+    <div class="container-fluid my-5">
+        <div class="alert alert-info text-center">
+            <h4>Nothing inside your cart!</h4>
+            <p><a href="/" class="link-primary">Add a product</a></p>
+        </div>
+    </div>
+</section>
+{{/if}}

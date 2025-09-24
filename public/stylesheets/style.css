@@ -1,0 +1,98 @@
+:root {
+  --darkBgColor: rgb(37, 37, 37);
+  --darkTextColor: white;
+  --darkNavBarBgColor: rgb(20, 20, 20);
+  --darkNavBarTextColor: white;
+  --secondary: ;
+
+  --bgColor: var(--darkBgColor);
+  --textColor: var(--darkTextColor);
+  --navBarBgColor: var(--darkNavBarBgColor);
+  --navBarTextColor: var(--darkNavBarTextColor);
+
+  --scrollbar-width: thin;
+  --scrollbar-track-bg: var(--bs-body-tertiary-bg);
+  --scrollbar-thumb-bg: var(--bs-secondary-bg);
+  --scrollbar-thumb-hover-bg: var(--bs-secondary-bg-subtle);
+  --scrollbar-border-radius: 1px;
+}
+
+/* 2. Dark-mode overrides if you add .dark on <html> (or rely on data-bs-theme) */
+:root.dark {
+  --scrollbar-track-bg: var(--bs-body-secondary-bg);
+  --scrollbar-thumb-bg: var(--bs-secondary-bg-subtle);
+  --scrollbar-thumb-hover-bg: var(--bs-secondary-bg);
+}
+
+/* 3. WebKit browsers */
+::-webkit-scrollbar {
+  width:  var(--scrollbar-width);
+  height: var(--scrollbar-width);
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb-bg);
+  border-radius:    var(--scrollbar-border-radius);
+  border: 3px solid var(--scrollbar-track-bg);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--scrollbar-thumb-hover-bg);
+}
+
+/* 4. Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb-bg) var(--scrollbar-track-bg);
+
+}
+
+body {
+  /* background-color: var(--bgColor);
+  color: var(--textColor); */
+  padding-top: 3rem;
+}
+
+.navbar {
+  background-color: var(--navBarBgColor);
+}
+
+.navBarTextColor {
+  color: var(--navBarTextColor);
+}
+
+.navBarTextColor:hover {
+  color: var(--navBarTextColor);
+}
+
+.dropdown-menu {
+  background-color: var(--navBarBgColor);
+}
+
+.custom-card {
+  transition: all 0.2s;
+  background: var(--secondary-color);
+  box-shadow: 0 0 1em rgb(0, 0, 0);
+  height: fit-content;
+}
+
+.custom-card:hover {
+  transform: scale(1.05);
+  background: black;
+  border: solid 0.7px white;
+}
+
+.noTextDecoration{
+    text-decoration: none;
+}
+
+.copyrights-area {
+    background: rgba(33, 37, 41, 0); /* semi-transparent dark */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    font-size: x-small;
+}

@@ -1,0 +1,117 @@
+<section class="mt-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10">
+                <div class="card bg-primary-subtle text-body shadow-md">
+                    <div class="card-header bg-tertiary-subtle text-primary-emphasis text-center py-3">
+                        <h3 class="mb-0">Edit Product</h3>
+                    </div>
+                    <div class="card-body">
+                        <form action="/admin/edit-product" method="POST" enctype="multipart/form-data" class="needs-validation"
+                            id="editProductForm" novalidate>
+                            <input type="text" name="id" value="{{product._id}}" hidden>
+                            <div class="invalid-feedback"></div>
+                            <!-- Name & Rate Row -->
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-8">
+                                    <label for="name" class="form-label">Product Name</label>
+                                    <input type="text" id="name" name="name" class="form-control"
+                                        placeholder="Enter product name" value="{{product.name}}" required>
+                                    <div class="invalid-feedback">
+                                        Please enter a product name.
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="rate" class="form-label">Price (₹)</label>
+                                    <input type="number" id="rate" name="rate" class="form-control" placeholder="0.00"
+                                        min="0" step="0.01" value="{{product.rate}}" required>
+                                    <div class="invalid-feedback">
+                                        Please enter a valid price.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Category & Description Row -->
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-6">
+                                    <label for="category" class="form-label">Category</label>
+                                    <select id="category" name="category" class="form-select" required>
+                                        <option value="" disabled>Select category</option>
+                                        <option {{#if (cond product.category '===' 'Electronics' )}}selected{{/if}}>
+                                            Electronics</option>
+                                        <option {{#if (cond product.category '===' 'Clothing' )}}selected{{/if}}>
+                                            Clothing</option>
+                                        <option {{#if (cond product.category '===' 'Home & Garden' )}}selected{{/if}}>
+                                            Home & Garden</option>
+                                        <option {{#if (cond product.category '===' 'Books' )}}selected{{/if}}>Books
+                                        </option>
+                                        <option {{#if (cond product.category '===' 'Other' )}}selected{{/if}}>Other
+                                        </option>
+                                    </select>
+                                    <div class="invalid-feedback">
+                                        Please select a category.
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="description" class="form-label">Short Description</label>
+                                    <textarea id="description" name="description" class="form-control" rows="1"
+                                        maxlength="100" placeholder="Brief description"
+                                        required>{{product.description}}</textarea>
+                                    <div class="form-text">Max 100 characters.</div>
+                                    <div class="invalid-feedback">
+                                        Please enter a description.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Image Upload & Preview -->
+                            <div class="mb-4">
+                                <label for="image" class="form-label">Product Image</label>
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="border border-primary-subtle rounded p-1"
+                                        style="width: 5em; height: 5em; overflow: hidden;">
+                                        <img src="/productImages/{{product._id}}.png" alt="Preview" id="displayImage"
+                                            class="w-100 h-100 rounded object-fit-cover">
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <input type="file" id="image" name="image" accept="image/*" class="form-control"
+                                            onchange="updateDisplayImage(event)">
+                                        <div class="form-text">Upload a new image to replace the current one.</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary px-5">
+                                    <i class="bi bi-pencil-square me-2"></i>Confirm Edit
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    const form = document.getElementById('editProductForm')
+    form.addEventListener('submit', e => {
+        e.preventDefault()
+        const formData = new FormData(form)
+        fetch('/admin/edit-product',{
+            method: "POST",
+            body: formData
+        }).then((response) => {
+            if (!response.ok) throw new Error()
+            return response.json()
+        }).then((response) => {
+            sendToast('text-success-emphasis', 'Edit Successful.', 'bi bi-check-square', `${response.statusText}`, () => {
+                goTo('/admin')
+            })
+        }).catch((error)=>{
+            sendAlert('', 'Something went wrong while updating the product')
+        })
+    })
+</script>

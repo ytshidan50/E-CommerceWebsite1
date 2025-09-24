@@ -1,0 +1,30 @@
+<header>
+    <nav class="navbar fixed-top navbar-expand-md">
+        <div class="container-fluid">
+            <a class="navbar-brand navBarTextColor" href="/">Shopping Cart</a>
+            <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="row justify-condent-end">
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link navBarTextColor" href="/">Products</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link navBarTextColor" href="/cart">Cart <span class="badge text-bg-secondary"
+                                    id="cartCount">{{req.session.user.cartCount}}</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link navBarTextColor" href="/orders">Orders</a>
+                        </li>
+                    </ul>
+                    {{>accountButton}}
+                    {{>themeSelector}}
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>

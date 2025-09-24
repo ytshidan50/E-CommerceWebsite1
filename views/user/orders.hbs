@@ -1,0 +1,268 @@
+{{#if (gte orders.length 1)}}
+<section class="mt-4">
+    <div class="container">
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2 class="mb-1">My Orders</h2>
+                        <p class="text-body-secondary mb-0">Track and manage your recent orders</p>
+                    </div>
+                    <div>
+                        <button class="btn btn-outline-primary btn-sm" onclick="location.reload()">
+                            <i class="bi bi-arrow-clockwise"></i> Refresh
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Orders Summary Cards -->
+        <div class="row g-3 mb-4">
+            <div class="col-6 col-md-3">
+                <div class="card bg-primary-subtle text-primary-emphasis text-center">
+                    <div class="card-body py-3">
+                        <i class="bi bi-box-seam fs-4 mb-1"></i>
+                        <h4 class="mb-0" id="totalOrdersCount">{{orders.length}}</h4>
+                        <small>Total Orders</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card bg-warning-subtle text-warning-emphasis text-center">
+                    <div class="card-body py-3">
+                        <i class="bi bi-clock-history fs-4 mb-1"></i>
+                        <h4 class="mb-0" id="pendingOrdersCount">0</h4>
+                        <small>In Progress</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card bg-success-subtle text-success-emphasis text-center">
+                    <div class="card-body py-3">
+                        <i class="bi bi-check-circle fs-4 mb-1"></i>
+                        <h4 class="mb-0" id="deliveredOrdersCount">0</h4>
+                        <small>Delivered</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card bg-info-subtle text-info-emphasis text-center">
+                    <div class="card-body py-3">
+                        <i class="bi bi-currency-rupee fs-4 mb-1"></i>
+                        <h4 class="mb-0" id="totalSpentAmount">₹0</h4>
+                        <small>Total Spent</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Orders List -->
+        <div class="row">
+            {{#each orders}}
+            <div class="col-12 mb-4">
+                <div class="card shadow-sm border-0">
+                    <!-- Order Header -->
+                    <div class="card-header bg-body-secondary d-flex justify-content-between align-items-center py-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center"
+                                style="width: 45px; height: 45px;">
+                                <i class="bi bi-bag fs-5"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">Order #{{add @index 1}}</h6>
+                                <small class="text-body-secondary">
+                                    <input type="text" value="{{toString this._id}}"
+                                        class="border-0 bg-transparent text-body-secondary"
+                                        style="width: 140px; font-size: 0.8em; cursor: text;" onclick="this.select();"
+                                        readonly>
+                                </small>
+                            </div>
+                        </div>
+                        <div class="text-end">
+                            <h5 class="mb-0 text-success-emphasis">₹{{this.total}}</h5>
+                            <small class="text-body-secondary">{{this.totalItems}} items</small>
+                        </div>
+                    </div>
+
+                    <!-- Order Body -->
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <!-- Order Status & Progress -->
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                        <span class="badge 
+                      {{#if (cond this.status '===' 'pending')}}bg-warning-subtle text-warning-emphasis{{/if}}
+                      {{#if (cond this.status '===' 'placed')}}bg-primary-subtle text-primary-emphasis{{/if}}
+                      {{#if (cond this.status '===' 'shipped')}}bg-info-subtle text-info-emphasis{{/if}}
+                      {{#if (cond this.status '===' 'delivered')}}bg-success-subtle text-success-emphasis{{/if}}
+                      {{#if (cond this.status '===' 'returned')}}bg-danger-subtle text-danger-emphasis{{/if}}
+                      {{#if (cond this.status '===' 'cancelled')}}bg-dark-subtle text-dark-emphasis{{/if}}
+                      fs-6 px-3 py-2">
+                                            {{this.status}}
+                                        </span>
+                                    </div>
+
+                                    <!-- Progress Bar -->
+                                    <div class="progress" style="height: 8px;">
+                                        <div class="progress-bar 
+                      {{#if (cond this.status '===' 'pending')}}bg-warning{{/if}}
+                      {{#if (cond this.status '===' 'placed')}}bg-primary{{/if}}
+                      {{#if (cond this.status '===' 'shipped')}}bg-info{{/if}}
+                      {{#if (cond this.status '===' 'delivered')}}bg-success{{/if}}
+                      {{#if (cond this.status '===' 'returned')}}bg-danger{{/if}}
+                      {{#if (cond this.status '===' 'cancelled')}}bg-dark{{/if}}" style="width: 
+                        {{#if (cond this.status '===' 'pending')}}25%{{/if}}
+                        {{#if (cond this.status '===' 'placed')}}50%{{/if}}
+                        {{#if (cond this.status '===' 'shipped')}}75%{{/if}}
+                        {{#if (cond this.status '===' 'delivered')}}100%{{/if}}
+                        {{#if (cond this.status '===' 'returned')}}100%{{/if}}
+                        {{#if (cond this.status '===' 'cancelled')}}25%{{/if}}">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Order Details -->
+                                <div class="row g-2 small">
+                                    <div class="col-6">
+                                        <i class="bi bi-calendar3 text-body-secondary me-1"></i>
+                                        <strong>Ordered:</strong><br>
+                                        <span class="text-body-secondary">{{this.times.ordered}}</span>
+                                    </div>
+                                    <div class="col-6">
+                                        <i class="bi bi-credit-card text-body-secondary me-1"></i>
+                                        <strong>Payment:</strong><br>
+                                        {{#if (cond this.payment.method '===' 'COD')}}
+                                        <span class="badge bg-warning-subtle text-warning-emphasis">Cash on
+                                            Delivery</span>
+                                        {{else}}
+                                        <span class="badge bg-success-subtle text-success-emphasis">Online
+                                            Payment</span>
+                                        {{/if}}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Delivery Details -->
+                            <div class="col-md-6">
+                                <div class="bg-body-tertiary rounded p-3">
+                                    <h6 class="mb-2">
+                                        <i class="bi bi-geo-alt text-primary me-1"></i>
+                                        Delivery Address
+                                    </h6>
+                                    <p class="mb-1"><strong>{{this.deliveryDetails.mobile}}</strong></p>
+                                    <p class="small text-body-secondary mb-0">{{this.deliveryDetails.address}}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <div class="d-flex gap-2 flex-wrap">
+                                    <a href="/order/{{this._id}}" class="btn btn-primary btn-sm">
+                                        <i class="bi bi-eye me-1"></i>View Details
+                                    </a>
+                                    {{#if (cond this.status '===' 'pending')}}
+                                    <button class="btn btn-success btn-sm" onclick="continuePayment({{json this}})">
+                                        <i class="bi bi-credit-card me-1"></i>Make Payment</button>
+                                    <button class="btn btn-outline-danger btn-sm" onclick="cancelOrder('{{this._id}}')">
+                                        <i class="bi bi-x-circle me-1"></i>Cancel Order
+                                    </button>
+                                    {{/if}}
+                                    {{#if (cond this.status '===' 'placed')}}
+                                    <button class="btn btn-outline-secondary btn-sm">
+                                        <i class="bi bi-arrow-repeat me-1"></i>Reorder
+                                    </button>
+                                    {{/if}}
+                                    {{#if (cond this.status '===' 'shipped')}}
+                                    <button class="btn btn-outline-secondary btn-sm">
+                                        <i class="bi bi-arrow-repeat me-1"></i>Reorder
+                                    </button>
+                                    {{/if}}
+                                    {{#if (cond this.status '===' 'delivered')}}
+                                    <button class="btn btn-outline-success btn-sm">
+                                        <i class="bi bi-download me-1"></i>Download Invoice
+                                    </button>
+                                    <button class="btn btn-outline-secondary btn-sm">
+                                        <i class="bi bi-arrow-repeat me-1"></i>Reorder
+                                    </button>
+                                    {{/if}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+</section>
+
+{{else}}
+<!-- Empty State -->
+<section class="mt-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card border-0 text-center py-5">
+                    <div class="card-body">
+                        <i class="bi bi-bag-x display-1 text-body-tertiary mb-3"></i>
+                        <h4 class="mb-3">No Orders Yet</h4>
+                        <p class="text-body-secondary mb-4">You haven't placed any orders yet. Start shopping to see
+                            your orders here!</p>
+                        <a href="/" class="btn btn-primary">
+                            <i class="bi bi-shop me-1"></i>Start Shopping
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{{/if}}
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="/javascripts/payment.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const orders = {{{ json orders }}};
+
+    let pending = 0, delivered = 0, totalSpent = 0;
+
+    orders.forEach(order => {
+        if (order.status === 'pending' || order.status === 'placed' || order.status === 'shipped') {
+            pending++;
+        }
+        if (order.status === 'delivered') {
+            delivered++;
+        }
+        if (order.status !== 'cancelled' && order.status !== 'returned') {
+            totalSpent += order.total;
+        }
+    });
+
+    document.getElementById('pendingOrdersCount').textContent = pending;
+    document.getElementById('deliveredOrdersCount').textContent = delivered;
+    document.getElementById('totalSpentAmount').textContent = '₹' + totalSpent.toLocaleString('en-IN');
+  });
+
+    function cancelOrder(orderId) {
+        fetch('/cancel-order', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ orderId })
+        }).then((response) => {
+            if (!response.ok) throw new Error()
+            return response.json()
+        }).then((response) => {
+            showToast('text-success-emphasis', 'Order Cancelled', 'bi bi-check-square', 'You have successfully cancelled the order', () => {
+                location.reload()
+            })
+        })
+    }
+
+</script>

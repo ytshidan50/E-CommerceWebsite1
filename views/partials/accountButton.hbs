@@ -1,0 +1,28 @@
+<div class="dropdown">
+    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        {{#if req.session.user}}
+            {{req.session.user.fullName}}
+        {{else}}
+            Account
+        {{/if}}
+    </button>
+    <ul class="dropdown-menu dropdown dropdown-menu-dark">
+        {{#if req.session.user}}
+            <li><a class="dropdown-item" href="/edit-profile">Profile</a></li>
+            <li><a class="dropdown-item" href="/logout">Logout</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="/cart">Cart</a></li>
+            <li><a class="dropdown-item" href="/orders">Orders</a></li>
+        {{else}}
+            <li><a class="dropdown-item" href="/login">Login</a></li>
+            <li><a class="dropdown-item" href="/signup">Sign Up</a></li>
+        {{/if}}
+        {{#if req.session.user.admin}}
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="/admin">View Products</a></li>
+            <li><a class="dropdown-item" href="/admin/add-product">Add Product</a></li>
+            <li><a class="dropdown-item" href="/admin/full-orders">Full Orders</a></li>
+            <li><a class="dropdown-item" href="/admin/full-users">Full Users</a></li>
+        {{/if}}
+    </ul>
+</div>

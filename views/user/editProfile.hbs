@@ -1,0 +1,35 @@
+<section class="mt-5">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="m-4 p-2 bg-secondary rounded-3" style="width: 50rem;">
+                <h1 class="text-center">Edit Profile</h1>
+                <form action="/edit-profile" method="post" class="needs-validation" novalidate>
+                    <div class="mb-3">
+                        <label for="fullName" class="form-label">Full Name</label>
+                        <input value="{{req.session.user.fullName}}" type="text" class="form-control" id="fullName" name="fullName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email Address</label>
+                        <input value="{{req.session.user.email}}" type="email" class="form-control" id="email"
+                            name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="mobile" class="form-label">Mobile Number</label>
+                        <input value="{{req.session.user.mobile}}" type="number" class="form-control" id="mobile"
+                            name="mobile">
+                    </div>
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Address</label>
+                        <input value="{{req.session.user.address}}" type="text" class="form-control" id="address" name="address">
+                    </div>
+                    <div class="mb-3">
+                        <label for="pinCode" class="form-label">Pin Code</label>
+                        <input value="{{req.session.user.pinCode}}" type="number" class="form-control" id="pinCode"
+                            name="pinCode">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update Profile</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
